@@ -3,42 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>血压数据追踪</title>
+    <title>健康数据追踪</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="lib/all.min.css">
+    <style>
+        .overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .overview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .overview-card:hover {
+            transform: translateY(-10px);
+        }
+        .overview-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .overview-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        .overview-unit {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-left: 5px;
+        }
+        .overview-time {
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .overview-card.no-data .overview-value {
+            color: #95a5a6;
+            font-size: 1.5rem;
+        }
+        .nav-header {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        .nav-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header class="nav-header">
+        <div class="nav-container">
+            <h1 class="nav-title"><i class="fas fa-heartbeat"></i> 健康数据追踪</h1>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link active"><i class="fas fa-home"></i> 主页</a>
+                <a href="bloodpressure.html" class="nav-link"><i class="fas fa-heartbeat"></i> 血压</a>
+                <a href="bloodsugar.html" class="nav-link"><i class="fas fa-tint"></i> 血糖</a>
+                <a href="weight.html" class="nav-link"><i class="fas fa-weight"></i> 体重</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
-        <header>
-            <h1><i class="fas fa-heartbeat"></i> 血压数据追踪</h1>
-            <p class="subtitle">监测您的高压和低压随时间的变化</p>
-        </header>
-
         <main>
-            <div class="chart-container">
-                <canvas id="bpChart"></canvas>
-                <div id="chartLoading" class="loading-overlay">
-                    <div class="loading-spinner"></div>
-                    <p>加载图表中...</p>
+            <h2><i class="fas fa-chart-line"></i> 数据总览</h2>
+            <p class="subtitle">最近一次记录的血压、血糖和体重数据</p>
+            
+            <div class="overview" id="overviewContainer">
+                <!-- 血压卡片 -->
+                <div class="overview-card" id="bpCard">
+                    <h3><i class="fas fa-heartbeat"></i> 血压</h3>
+                    <div class="overview-value" id="bpValue">--</div>
+                    <div class="overview-time" id="bpTime">暂无数据</div>
+                </div>
+                
+                <!-- 血糖卡片 -->
+                <div class="overview-card" id="bsCard">
+                    <h3><i class="fas fa-tint"></i> 血糖</h3>
+                    <div class="overview-value" id="bsValue">--</div>
+                    <div class="overview-time" id="bsTime">暂无数据</div>
+                </div>
+                
+                <!-- 体重卡片 -->
+                <div class="overview-card" id="weightCard">
+                    <h3><i class="fas fa-weight"></i> 体重</h3>
+                    <div class="overview-value" id="weightValue">--</div>
+                    <div class="overview-time" id="weightTime">暂无数据</div>
                 </div>
             </div>
-
-            <div class="controls">
-                <button id="addDataBtn" class="btn-primary">
-                    <i class="fas fa-plus-circle"></i> 添加新读数
+            
+            <div class="controls" style="margin-top: 40px;">
+                <button id="refreshBtn" class="btn-primary">
+                    <i class="fas fa-sync-alt"></i> 刷新数据
                 </button>
-                <button id="exportDataBtn" class="btn-secondary">
-                    <i class="fas fa-download"></i> 导出数据
-                </button>
-                <button id="clearDataBtn" class="btn-secondary">
-                    <i class="fas fa-trash-alt"></i> 清除所有数据
-                </button>
-            </div>
-
-            <div class="data-summary">
-                <h2><i class="fas fa-history"></i> 最近读数</h2>
-                <div id="recentReadings">
-                    <p class="empty-message">暂无数据。添加您的第一个读数！</p>
-                </div>
             </div>
         </main>
 
@@ -47,42 +164,78 @@
         </footer>
     </div>
 
-    <!-- Modal for input -->
-    <div id="inputModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-edit"></i> 添加血压读数</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="bpForm">
-                    <div class="form-group">
-                        <label for="systolic"><i class="fas fa-arrow-up"></i> 高压（收缩压）</label>
-                        <input type="number" id="systolic" min="50" max="250" step="1" placeholder="例如：120" required>
-                        <span class="unit">mmHg</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="diastolic"><i class="fas fa-arrow-down"></i> 低压（舒张压）</label>
-                        <input type="number" id="diastolic" min="30" max="150" step="1" placeholder="例如：80" required>
-                        <span class="unit">mmHg</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="time"><i class="far fa-clock"></i> 日期和时间</label>
-                        <input type="datetime-local" id="time" required>
-                        <span class="hint">精确到分钟</span>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn-secondary" id="cancelBtn">取消</button>
-                        <button type="submit" class="btn-primary">保存读数</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- External libraries -->
-    <link rel="stylesheet" href="lib/all.min.css">
-    <script src="lib/chart.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.addEventListener('click', loadOverviewData);
+            
+            // 初始加载
+            loadOverviewData();
+            
+            function loadOverviewData() {
+                // 血压数据
+                const bpData = JSON.parse(localStorage.getItem('bloodPressureData') || '[]');
+                if (bpData.length > 0) {
+                    const latestBp = bpData[bpData.length - 1];
+                    document.getElementById('bpValue').textContent = `${latestBp.systolic}/${latestBp.diastolic}`;
+                    document.getElementById('bpValue').innerHTML = `${latestBp.systolic}<span class="overview-unit">/</span>${latestBp.diastolic} <span class="overview-unit">mmHg</span>`;
+                    document.getElementById('bpTime').textContent = formatTimeForDisplay(latestBp.time);
+                    document.getElementById('bpCard').classList.remove('no-data');
+                } else {
+                    document.getElementById('bpValue').textContent = '暂无数据';
+                    document.getElementById('bpCard').classList.add('no-data');
+                }
+                
+                // 血糖数据
+                const bsData = JSON.parse(localStorage.getItem('bloodSugarData') || '[]');
+                if (bsData.length > 0) {
+                    const latestBs = bsData[bsData.length - 1];
+                    document.getElementById('bsValue').textContent = latestBs.glucose;
+                    document.getElementById('bsValue').innerHTML = `${latestBs.glucose} <span class="overview-unit">mmol/L</span>`;
+                    document.getElementById('bsTime').textContent = formatTimeForDisplay(latestBs.time);
+                    document.getElementById('bsCard').classList.remove('no-data');
+                } else {
+                    document.getElementById('bsValue').textContent = '暂无数据';
+                    document.getElementById('bsCard').classList.add('no-data');
+                }
+                
+                // 体重数据
+                const weightData = JSON.parse(localStorage.getItem('weightData') || '[]');
+                if (weightData.length > 0) {
+                    const latestWeight = weightData[weightData.length - 1];
+                    document.getElementById('weightValue').textContent = latestWeight.weight;
+                    document.getElementById('weightValue').innerHTML = `${latestWeight.weight} <span class="overview-unit">kg</span>`;
+                    document.getElementById('weightTime').textContent = formatTimeForDisplay(latestWeight.time);
+                    document.getElementById('weightCard').classList.remove('no-data');
+                } else {
+                    document.getElementById('weightValue').textContent = '暂无数据';
+                    document.getElementById('weightCard').classList.add('no-data');
+                }
+            }
+            
+            function formatTimeForDisplay(timeString) {
+                const date = new Date(timeString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffMins < 60) {
+                    return `${diffMins} 分钟前`;
+                } else if (diffHours < 24) {
+                    return `${diffHours} 小时前`;
+                } else if (diffDays < 7) {
+                    return `${diffDays} 天前`;
+                } else {
+                    return date.toLocaleDateString('zh-CN', { 
+                        year: 'numeric',
+                        month: 'short', 
+                        day: 'numeric'
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>
