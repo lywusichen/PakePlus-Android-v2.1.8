@@ -12,7 +12,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 100px 20px 20px 20px;
     color: #333;
 }
 
@@ -166,6 +166,14 @@ button i {
 }
 
 .reading-item.diastolic-high {
+    border-left-color: #f39c12;
+}
+
+.reading-item.glucose-high {
+    border-left-color: #e74c3c;
+}
+
+.reading-item.weight-high {
     border-left-color: #f39c12;
 }
 
@@ -381,6 +389,9 @@ button:disabled {
 
 /* Responsive */
 @media (max-width: 768px) {
+    body {
+        padding: 120px 20px 20px 20px;
+    }
     .container {
         padding: 20px;
     }
@@ -413,4 +424,65 @@ button:disabled {
     .reading-actions {
         align-self: flex-end;
     }
+    .nav-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
+
+/* Navigation Header */
+.nav-header {
+    background: linear-gradient(to right, #3498db, #2980b9);
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    border-radius: 0 0 15px 15px;
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+.nav-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.3);
+}
+
