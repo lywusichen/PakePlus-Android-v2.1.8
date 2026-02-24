@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血压数据追踪</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="nav-header">
+        <div class="nav-container">
+            <h1 class="nav-title"><i class="fas fa-heartbeat"></i> 健康数据追踪</h1>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 主页</a>
+                <a href="bloodpressure.html" class="nav-link active"><i class="fas fa-heartbeat"></i> 血压</a>
+                <a href="bloodsugar.html" class="nav-link"><i class="fas fa-tint"></i> 血糖</a>
+                <a href="weight.html" class="nav-link"><i class="fas fa-weight"></i> 体重</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> 血压数据追踪</h1>
+            <p class="subtitle">监测您的高压和低压随时间的变化</p>
+        </header>
+
+        <main>
+            <div class="chart-container">
+                <canvas id="bpChart"></canvas>
+                <div id="chartLoading" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <p>加载图表中...</p>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="addDataBtn" class="btn-primary">
+                    <i class="fas fa-plus-circle"></i> 添加新读数
+                </button>
+                <button id="exportDataBtn" class="btn-secondary">
+                    <i class="fas fa-download"></i> 导出数据
+                </button>
+                <button id="clearDataBtn" class="btn-secondary">
+                    <i class="fas fa-trash-alt"></i> 清除所有数据
+                </button>
+            </div>
+
+            <div class="data-summary">
+                <h2><i class="fas fa-history"></i> 今日读数</h2>
+                <div id="recentReadings">
+                    <p class="empty-message">暂无数据。添加您的第一个读数！</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>数据存储在您的浏览器本地。您的信息不会离开您的设备。</p>
+        </footer>
+    </div>
+
+    <!-- Modal for input -->
+    <div id="inputModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> 添加血压读数</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="bpForm">
+                    <div class="form-group">
+                        <label for="systolic"><i class="fas fa-arrow-up"></i> 高压（收缩压）</label>
+                        <input type="number" id="systolic" min="50" max="250" step="1" placeholder="例如：120" required>
+                        <span class="unit">mmHg</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="diastolic"><i class="fas fa-arrow-down"></i> 低压（舒张压）</label>
+                        <input type="number" id="diastolic" min="30" max="150" step="1" placeholder="例如：80" required>
+                        <span class="unit">mmHg</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="time"><i class="far fa-clock"></i> 日期和时间</label>
+                        <input type="datetime-local" id="time" required>
+                        <span class="hint">精确到分钟</span>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelBtn">取消</button>
+                        <button type="submit" class="btn-primary">保存读数</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- External libraries -->
+    <link rel="stylesheet" href="lib/all.min.css">
+    <script src="lib/chart.min.js"></script>
+    <script src="bloodpressure.js"></script>
+</body>
+</html>
